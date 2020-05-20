@@ -13,6 +13,11 @@
 		11E6138C246A205C006C99DF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11E6138A246A205C006C99DF /* Main.storyboard */; };
 		11E6138E246A2061006C99DF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 11E6138D246A2061006C99DF /* Assets.xcassets */; };
 		11E61391246A2061006C99DF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11E6138F246A2061006C99DF /* LaunchScreen.storyboard */; };
+		11E6139D246C4D43006C99DF /* RoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E6139C246C4D43006C99DF /* RoundButton.swift */; };
+		11E613A3246C4F85006C99DF /* 1059-sliders-toolbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 11E613A0246C4F85006C99DF /* 1059-sliders-toolbar@2x.png */; };
+		11E613A4246C4F85006C99DF /* 1059-sliders-toolbar@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 11E613A1246C4F85006C99DF /* 1059-sliders-toolbar@3x.png */; };
+		11E613A5246C4F85006C99DF /* 1059-sliders-toolbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 11E613A2246C4F85006C99DF /* 1059-sliders-toolbar.png */; };
+		11E613A7246DC261006C99DF /* PaddedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E613A6246DC261006C99DF /* PaddedLabel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +29,11 @@
 		11E6138D246A2061006C99DF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		11E61390246A2061006C99DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		11E61392246A2061006C99DF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		11E6139C246C4D43006C99DF /* RoundButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundButton.swift; sourceTree = "<group>"; };
+		11E613A0246C4F85006C99DF /* 1059-sliders-toolbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1059-sliders-toolbar@2x.png"; sourceTree = "<group>"; };
+		11E613A1246C4F85006C99DF /* 1059-sliders-toolbar@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1059-sliders-toolbar@3x.png"; sourceTree = "<group>"; };
+		11E613A2246C4F85006C99DF /* 1059-sliders-toolbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1059-sliders-toolbar.png"; sourceTree = "<group>"; };
+		11E613A6246DC261006C99DF /* PaddedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddedLabel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,9 +67,14 @@
 			isa = PBXGroup;
 			children = (
 				11E61384246A205C006C99DF /* AppDelegate.swift */,
-				11E61386246A205C006C99DF /* SceneDelegate.swift */,
-				11E61388246A205C006C99DF /* ViewController.swift */,
 				11E6138A246A205C006C99DF /* Main.storyboard */,
+				11E61388246A205C006C99DF /* ViewController.swift */,
+				11E6139C246C4D43006C99DF /* RoundButton.swift */,
+				11E613A6246DC261006C99DF /* PaddedLabel.swift */,
+				11E61386246A205C006C99DF /* SceneDelegate.swift */,
+				11E613A2246C4F85006C99DF /* 1059-sliders-toolbar.png */,
+				11E613A0246C4F85006C99DF /* 1059-sliders-toolbar@2x.png */,
+				11E613A1246C4F85006C99DF /* 1059-sliders-toolbar@3x.png */,
 				11E6138D246A2061006C99DF /* Assets.xcassets */,
 				11E6138F246A2061006C99DF /* LaunchScreen.storyboard */,
 				11E61392246A2061006C99DF /* Info.plist */,
@@ -126,8 +141,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				11E61391246A2061006C99DF /* LaunchScreen.storyboard in Resources */,
+				11E613A3246C4F85006C99DF /* 1059-sliders-toolbar@2x.png in Resources */,
 				11E6138E246A2061006C99DF /* Assets.xcassets in Resources */,
 				11E6138C246A205C006C99DF /* Main.storyboard in Resources */,
+				11E613A5246C4F85006C99DF /* 1059-sliders-toolbar.png in Resources */,
+				11E613A4246C4F85006C99DF /* 1059-sliders-toolbar@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,8 +156,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11E6139D246C4D43006C99DF /* RoundButton.swift in Sources */,
 				11E61389246A205C006C99DF /* ViewController.swift in Sources */,
 				11E61385246A205C006C99DF /* AppDelegate.swift in Sources */,
+				11E613A7246DC261006C99DF /* PaddedLabel.swift in Sources */,
 				11E61387246A205C006C99DF /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -287,6 +307,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = T6TG5W96HH;
 				INFOPLIST_FILE = ButtonMoveOverlay/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -305,6 +326,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = T6TG5W96HH;
 				INFOPLIST_FILE = ButtonMoveOverlay/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
