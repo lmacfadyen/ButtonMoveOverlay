@@ -12,10 +12,10 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var buttonMovable: RoundButton!
     @IBOutlet weak var viewOpening: UIView!
-    @IBOutlet weak var buttonCenterX: NSLayoutConstraint!
-    @IBOutlet weak var buttonCenterY: NSLayoutConstraint!
     @IBOutlet weak var viewMessage: UIView!
     @IBOutlet weak var labelInfo: UILabel!
+    @IBOutlet weak var buttonCenterX: NSLayoutConstraint!
+    @IBOutlet weak var buttonCenterY: NSLayoutConstraint!
     
     // Lazy initialization of maskView, keeping init code out of viewDidLoad
     lazy var maskView: MaskView = {
@@ -60,40 +60,44 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         super.viewDidLoad()
         self.view.addSubview(maskView) // will lazy initialize maskView
         
-        let pan = UIPanGestureRecognizer(target: self, action: #selector(ViewController.panSOS(_:)))
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(ViewController.panButton(_:)))
         buttonMovable.addGestureRecognizer(pan)
         pan.delegate = self
     }
-    
-    
     
     func closeOverlay() {
         maskView.isHidden = true
     }
     
-    @objc func panSOS(_ gestureRecognizer : UIPanGestureRecognizer) {
-        // Get the changes in the X and Y directions relative to
-        // the superview's coordinate space.
+    @objc func panButton(_ gestureRecognizer : UIPanGestureRecognizer) {
+        // Get the changes in the X and Y directions in the superview's coordinate
+        // space and relative to the start of movement, not compared to the last change
         let translation = gestureRecognizer.translation(in: buttonMovable.superview)
         if gestureRecognizer.state == .began {
             // Use starting button center for applying adjustments as panning is occuring
             // Existing center will reflect centerX/centerY constraint constants
             buttonCenter = buttonMovable.center
-            print(".began \(buttonCenterX.constant) \(buttonCenterY.constant)")
         }
         if gestureRecognizer.state == .ended || gestureRecognizer.state == .failed || gestureRecognizer.state == .cancelled{
+            // Not moving anymore, so get adjusted x/y, ie. how much the button has moved for x and y
+            // since the gesture started
             let adjusted = adjustedTranslation(inPoint: translation)
-            // Since not moving anymore, update constants based on full x/y adjustment since started moving
+            // Update constants based on starting constants plus x/y adjustments since started moving
             buttonCenterX.constant = buttonCenterX.constant + adjusted.x
             buttonCenterY.constant = buttonCenterY.constant + adjusted.y
+            // Set the new constants in UserDefaults
             UserDefaults.standard.set(buttonCenterX.constant, forKey: KeysButton.centerX)
             UserDefaults.standard.set(buttonCenterY.constant, forKey: KeysButton.centerY)
-            
         }
         else {
-            //Movement continuing so adjust position if exceeding edges
+            // Button still moving, so get translation from starting position
+            // Note that adjustedTranslation will adjust as needed so button stays in opening
             let adjusted = adjustedTranslation(inPoint: translation)
+            // Calculate desired center of the button, so if it had moved outside opening, it would
+            // have been adjusted to just be at the edges, thus to the user, it never goes beyond opening
             let newCenter = CGPoint(x: buttonCenter.x + adjusted.x, y: buttonCenter.y + adjusted.y)
+            // Set current button center to what was calculated - it could match where it moved to
+            // or it could be adjusted if it was going beyond the edges of opening space
             buttonMovable.center = newCenter
         }
     }
@@ -101,16 +105,20 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func adjustedTranslation(inPoint: CGPoint) -> CGPoint
     {
-        // these are how much moved, not absolute values of what the constraint constant was
+        // Get the translation - how much the gesture has moved the button
+        // since gesture start, not since last translation
         var xTrans = inPoint.x
         var yTrans = inPoint.y
         
+        // The min and max X and Y translations allowed based on the size
+        // of the opening space, factoring in button radius, and where the buttonCenter
+        // started as beginning of the gesture
         xTransMin = buttonRadius - buttonCenter.x
         xTransMax = boundsWidth - buttonCenter.x - buttonRadius
         yTransMin = buttonRadius - buttonCenter.y
         yTransMax = boundsHeight - buttonCenter.y - buttonRadius
         
-        // Check actual trans with min/max values and adjust if necessary
+        // Check actual translation with min/max values and adjust if necessary
         // to keep button within required space
         if(xTrans <= xTransMin) {
             xTrans = xTransMin
@@ -125,6 +133,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         if(yTrans >= yTransMax) {
             yTrans = yTransMax
         }
+        // Return the adjusted translation CGPoint that keeps button in opening
         let result = CGPoint(x: xTrans, y: yTrans)
         return result
     }
@@ -186,7 +195,7 @@ class MaskView: UIView {
         let color = UIColor.label
         self.backgroundColor = color.withAlphaComponent(0.6)
         // make the overlay and opening
-        self.maskLayer()
+        self.configureMask()
         
         // Done button on the overlay to close it
         let button = UIButton()
@@ -198,19 +207,15 @@ class MaskView: UIView {
         button.clipsToBounds = true
         
         let centerX = self.bounds.width/2
-        //let centerY = self.bounds.height/2
-        let center = CGPoint(x: centerX, y: self.bounds.height * 0.35)
-        
-        button.center = center
-        
+        let buttonLocation = CGPoint(x: centerX, y: self.bounds.height * 0.35)
+        button.center = buttonLocation
         button.addTarget(self, action: #selector(donePressed(_:)), for: .touchUpInside)
         self.addSubview(button)
         
-        let locLabel = CGPoint(x: centerX, y: self.bounds.height * 0.2)
-        
         // label for user instructions
         let label = PaddedLabel(frame: CGRect(x: 0, y: 0, width: 280, height: 100))
-        label.center = locLabel
+        let labelLocation = CGPoint(x: centerX, y: self.bounds.height * 0.2)
+        label.center = labelLocation
         label.backgroundColor = .secondarySystemBackground
         label.textAlignment = .center
         label.textColor = UIColor.label
@@ -218,7 +223,6 @@ class MaskView: UIView {
         label.numberOfLines = 0
         label.layer.cornerRadius = 5.0
         label.layer.masksToBounds = true
-        
         self.addSubview(label)
     }
     
@@ -228,7 +232,7 @@ class MaskView: UIView {
     
     // Good techical resource for how to do the masking
     // https://www.calayer.com/core-animation/2016/05/22/cashapelayer-in-depth.html
-    func maskLayer() {
+    func configureMask() {
         // Create the mask layer
         let maskLayer = CAShapeLayer()
         // Create a path for the whole mask area
@@ -265,6 +269,5 @@ class MaskView: UIView {
 struct KeysButton {
     static let centerX = "centerX"
     static let centerY = "centerY"
-    
 }
 
